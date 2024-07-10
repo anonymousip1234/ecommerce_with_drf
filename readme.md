@@ -30,17 +30,15 @@ This project is a backend for an e-commerce platform built using Django and Djan
 
 1. Clone the repository:
 
-    ```bash
-    git clone https://github.com/yourusername/ecommerce-backend.git
+    git clone https://github.com/anonymousip1234/ecommerce_with_drf.git
     cd ecommerce-backend
-    ```
 
 2. Set up a virtual environment and activate it:
 
-    ```bash
+    
     python -m venv env
     source env/bin/activate  # On Windows use `env\Scripts\activate`
-    ```
+    
 
 3. Install the dependencies:
 
