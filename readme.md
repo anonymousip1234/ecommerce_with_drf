@@ -61,7 +61,7 @@ This project is a backend for an e-commerce platform built using Django and Djan
     DB_USER=root
     DB_PASSWORD=your_db_password
     DB_HOST=db
-    DB_PORT=3306
+    DB_PORT=5432
 
     CELERY_BROKER_URL=redis://redis:6379/0
     CELERY_RESULT_BACKEND=redis://redis:6379/0
@@ -106,7 +106,7 @@ The application should now be running at `http://localhost:8000`.
     }
     ```
 
-- **Obtain a token**: `POST /auth/token/`
+- **Obtain a token**: `POST /auth/login/`
     ```json
     {
         "username": "testuser",
@@ -132,21 +132,21 @@ The application should now be running at `http://localhost:8000`.
 
 ### Shopping Cart
 
-- **Add an item to the cart**: `POST /api/cart/`
+- **Add an item to the cart**: `POST /api/cart-items/`
     ```json
     {
         "product_id": 1,
         "quantity": 2
     }
     ```
-- **Remove an item from the cart**: `DELETE /api/cart/{id}/`
-- **Update an item in the cart**: `PUT /api/cart/{id}/`
+- **Remove an item from the cart**: `DELETE /api/cart-items/{id}/`
+- **Update an item in the cart**: `PUT /api/cart-items/{id}/`
     ```json
     {
         "quantity": 3
     }
     ```
-- **Get the cart total**: `GET /api/cart/total/`
+
 
 ### Orders
 
@@ -185,5 +185,3 @@ The application should now be running at `http://localhost:8000`.
 - The project is set up to run in a Docker environment, but it can also be run locally with the necessary adjustments to the settings.
 
 ---
-
-Feel free to reach out if you have any questions or need further assistance.

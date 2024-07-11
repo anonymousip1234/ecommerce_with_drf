@@ -1,7 +1,7 @@
 from django.shortcuts import render
 
 # Create your views here.
-from rest_framework import viewsets
+from rest_framework import viewsets,filters,permissions
 from .models import Product
 from .serializers import ProductSerializer
 from rest_framework.views import APIView
@@ -26,11 +26,13 @@ class TaskListView(APIView):
         scheduled_tasks = i.scheduled()
         return Response(scheduled_tasks)
     
+
 class ProductViewSet(viewsets.ModelViewSet):
-    queryset = Product.objects.all()  
+    queryset = Product.objects.all()
     serializer_class = ProductSerializer
-    permission_classes = [IsAuthenticated]
-    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
-    filterset_fields = ['price', 'stock']
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
+    filterset_fields = ['name', 'price', 'stock']
     search_fields = ['name', 'description']
-    ordering_fields = ['price', 'name']
+    ordering_fields = ['price', 'created_at']
+    ordering = ['created_at']
+    permission_classes = [permissions.IsAuthenticated]  # Require authentication

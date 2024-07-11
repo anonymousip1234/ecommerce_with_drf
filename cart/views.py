@@ -1,44 +1,43 @@
-from rest_framework import viewsets, status
+from rest_framework import viewsets, permissions, status
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
-from .models import CartItem
-from .serializers import CartItemSerializer
-from rest_framework.views import APIView
-from rest_framework.response import Response
+from .models import Cart, CartItem
+from .serializers import CartSerializer, CartItemSerializer
+from django.shortcuts import get_object_or_404
+from products.models import Product
 
-class CartItemViewSet(viewsets.ModelViewSet):
-    serializer_class = CartItemSerializer
-    permission_classes = [IsAuthenticated]
+class CartViewSet(viewsets.ModelViewSet):
+    queryset = Cart.objects.all()
+    serializer_class = CartSerializer
+    permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
-        return CartItem.objects.filter(user=self.request.user)
+        return self.queryset.filter(user=self.request.user)
 
-    def create(self, request, *args, **kwargs):
-        data = request.data.copy()
-        data['user'] = request.user.id
-        serializer = self.get_serializer(data=data)
-        serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
 
-    def update(self, request, *args, **kwargs):
-        instance = self.get_object()
-        if instance.user != request.user:
-            return Response(status=status.HTTP_403_FORBIDDEN)
-        return super().update(request, *args, **kwargs)
+class CartItemViewSet(viewsets.ModelViewSet):
+    queryset = CartItem.objects.all()
+    serializer_class = CartItemSerializer
+    permission_classes = [permissions.IsAuthenticated]
 
-    def destroy(self, request, *args, **kwargs):
-        instance = self.get_object()
-        if instance.user != request.user:
-            return Response(status=status.HTTP_403_FORBIDDEN)
-        return super().destroy(request, *args, **kwargs)
+    def get_queryset(self):
+        cart = get_object_or_404(Cart, user=self.request.user)
+        return self.queryset.filter(cart=cart)
 
+    def perform_create(self, serializer):
+        cart, created = Cart.objects.get_or_create(user=self.request.user)
+        product = get_object_or_404(Product, id=self.request.data['product'])
+        cart_item, created = CartItem.objects.get_or_create(cart=cart, product=product)
+        if not created:
+            cart_item.quantity += int(self.request.data['quantity'])
+            cart_item.save()
+        else:
+            serializer.save(cart=cart, product=product)
+    
+    def perform_update(self, serializer):
+        cart = get_object_or_404(Cart, user=self.request.user)
+        serializer.save(cart=cart)
 
-
-class CartTotalView(APIView):
-    permission_classes = [IsAuthenticated]
-
-    def get(self, request):
-        cart_items = CartItem.objects.filter(user=request.user)
-        total = sum(item.product.price * item.quantity for item in cart_items)
-        return Response({'total': total})
+    def perform_destroy(self, instance):
+        instance.delete()

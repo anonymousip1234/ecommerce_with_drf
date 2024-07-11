@@ -20,31 +20,24 @@ from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
 )
-from authentication.views import exchange_token,UserCreateView
+# from authentication.views import exchange_token,UserCreateView
 from rest_framework.routers import DefaultRouter
 from products.views import ProductViewSet,BulkUploadView,TaskListView
-from cart.views import CartItemViewSet,CartTotalView
+from cart.views import CartItemViewSet,CartViewSet
 from orders.views import OrderViewSet
 
 
 
-router = DefaultRouter()
-router.register(r'products', ProductViewSet, basename='product')
-router.register(r'cart', CartItemViewSet, basename='cart')
-router.register(r'orders', OrderViewSet, basename='order')
 
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('register/',UserCreateView.as_view(),name='user_register'),
-    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
-    path('auth/convert-token/', exchange_token, name='convert_token'),
+    path('api/auth/', include('authentication.urls')),
     path('api/bulk-upload/', BulkUploadView.as_view(), name='bulk_upload'),
     path('api/tasks/', TaskListView.as_view(), name='task_list'),
-    path('api/cart/total/', CartTotalView.as_view(), name='cart_total'),
-    path('api/', include(router.urls)),
-
+    path('api/',include('products.urls')),
+    path('api/',include('orders.urls')),
+    path('api/',include('cart.urls'))
 ]
 
