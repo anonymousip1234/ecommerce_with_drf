@@ -91,6 +91,12 @@ This project is a backend for an e-commerce platform built using Django and Djan
     docker-compose exec web python manage.py runserver
     ```
 
+9. Run the Celery Worker:
+
+    ```bash
+    celery -A ecommerce worker --l info
+    ```
+
 The application should now be running at `http://localhost:8000`.
 
 ## API Documentation
@@ -128,6 +134,7 @@ The application should now be running at `http://localhost:8000`.
 - **Create a new product**: `POST /api/products/` (Admin only)
 - **Update a product**: `PUT /api/products/{id}/` (Admin only)
 - **Delete a product**: `DELETE /api/products/{id}/` (Admin only)
+- **Bulk upload products using celery**: `POST /api/bulk_upload/`
 - **Search and filter products**: Use query parameters for filtering, searching, and ordering
 
 ### Shopping Cart

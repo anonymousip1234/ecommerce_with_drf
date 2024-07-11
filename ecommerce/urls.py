@@ -23,8 +23,6 @@ from rest_framework_simplejwt.views import (
 # from authentication.views import exchange_token,UserCreateView
 from rest_framework.routers import DefaultRouter
 from products.views import ProductViewSet,BulkUploadView,TaskListView
-from cart.views import CartItemViewSet,CartViewSet
-from orders.views import OrderViewSet
 
 
 
