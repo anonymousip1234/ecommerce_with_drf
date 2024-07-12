@@ -133,6 +133,12 @@ The application should now be running at `http://localhost:8000`.
         "password": "testpassword"
     }
     ```
+    Response:
+    ```json
+    {
+        "access_token" : "access token",
+    }
+    ```
 
 - **Refresh a token**: `POST /auth/token/refresh/`
     ```json
