@@ -7,6 +7,7 @@ This project is a backend for an e-commerce platform built using Django and Djan
 - Django
 - Django Rest Framework (DRF)
 - Celery
+- Redis
 - Docker
 - MySQL
 - Websockets
