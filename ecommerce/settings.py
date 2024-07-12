@@ -78,7 +78,7 @@ TEMPLATES = [
 ]
 
 
-WSGI_APPLICATION = 'ecommerce.wsgi.application'
+# WSGI_APPLICATION = 'ecommerce.wsgi.application'
 
 ASGI_APPLICATION = 'ecommerce.asgi.application'
 
@@ -214,4 +214,8 @@ REST_FRAMEWORK = {
 }
 
 CELERY_BROKER_URL = 'redis://localhost:6379/0'
-CELERY_RESULT_BACKEND = 'django-db'
+CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TIMEZONE = 'UTC'

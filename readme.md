@@ -39,7 +39,7 @@ This project is a backend for an e-commerce platform built using Django and Djan
 
     ```bash
     python -m venv env
-    source env/bin/activate  # On Windows use `env\Scripts\activate`
+    source env/bin/activate
     ```
 
 3. Install the dependencies:
@@ -67,34 +67,42 @@ This project is a backend for an e-commerce platform built using Django and Djan
     CELERY_RESULT_BACKEND=redis://redis:6379/0
     ```
 
-5. Run the Docker containers:
+5. Run migration commands:
+   ```bash
+    python manage.py makemigrations
+    python manage.py migrate
+   ```
+
+6. Run the Celery Worker:
+
+    ```bash
+    celery -A ecommerce worker -l info
+    ```
+
+#### Docker Setup Guide
+
+1. Run the Docker containers:
 
     ```bash
     docker-compose up --build
     ```
 
-6. Apply the database migrations:
+2. Apply the database migrations:
 
     ```bash
     docker-compose exec web python manage.py migrate
     ```
 
-7. Create a superuser:
+3. Create a superuser:
 
     ```bash
     docker-compose exec web python manage.py createsuperuser
     ```
 
-8. Run the development server:
+4. Run the development server:
 
     ```bash
     docker-compose exec web python manage.py runserver
-    ```
-
-9. Run the Celery Worker:
-
-    ```bash
-    celery -A ecommerce worker --l info
     ```
 
 The application should now be running at `http://localhost:8000`.
@@ -182,7 +190,7 @@ The application should now be running at `http://localhost:8000`.
 
 - The project uses Celery for handling background tasks such as bulk product uploads and sending email notifications.
 - JWT (JSON Web Token) is used for authentication.
-- The application uses MySQL as the database, but it can be configured to use other databases by updating the environment variables and settings.
+- The application uses PostgreSql as the database, but it can be configured to use other databases by updating the environment variables and settings.
 - Websockets are set up for real-time notifications but need further implementation for specific use cases.
 
 ## Assumptions Made

@@ -1,90 +1,21 @@
-# version: '3.8'
-
-# services:
-#   web:
-#     build: .
-#     command: gunicorn ecommerce.wsgi:application --bind 0.0.0.0:8000
-#     volumes:
-#       - .:/code
-#     ports:
-#       - "8000:8000"
-#     env_file:
-#       - .env
-#     depends_on:
-#       - db
-#       - redis
-#     environment:
-#       - CELERY_BROKER_URL=redis://redis:6379/0
-#       - CELERY_RESULT_BACKEND=redis://redis:6379/0
-
-#   db:
-#     image: mysql:5.7
-#     volumes:
-#       - mysql_data:/var/lib/mysql
-#     environment:
-#       MYSQL_DATABASE: ${DB_NAME}
-#       MYSQL_USER: ${DB_USER}
-#       MYSQL_PASSWORD: ${DB_PASSWORD}
-#       MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
-#     ports:
-#       - "3306:3306"
-
-#   redis:
-#     image: redis:alpine
-#     ports:
-#       - "6379:6379"
-
-#   celery:
-#     build: .
-#     command: celery -A ecommerce worker --loglevel=info
-#     volumes:
-#       - .:/code
-#     depends_on:
-#       - db
-#       - redis
-#     env_file:
-#       - .env
-#     environment:
-#       - CELERY_BROKER_URL=redis://redis:6379/0
-#       - CELERY_RESULT_BACKEND=redis://redis:6379/0
-
-#   celery-beat:
-#     build: .
-#     command: celery -A ecommerce beat --loglevel=info
-#     volumes:
-#       - .:/code
-#     depends_on:
-#       - db
-#       - redis
-#     env_file:
-#       - .env
-#     environment:
-#       - CELERY_BROKER_URL=redis://redis:6379/0
-#       - CELERY_RESULT_BACKEND=redis://redis:6379/0
-
-# volumes:
-#   mysql_data:
-
 version: '3.8'
 
 services:
   web:
     build: .
-    container_name: python_app
+    command: gunicorn ecommerce.wsgi:application --bind 0.0.0.0:8000
+    volumes:
+      - .:/code
     ports:
-      - "80:80"
+      - "8000:8000"
+    env_file:
+      - .env
     depends_on:
       - postgres
+      - redis
     environment:
-      - POSTGRES_HOST=postgres
-      - POSTGRES_PORT=5432
-      - POSTGRES_USER=user
-      - POSTGRES_PASSWORD=password
-      - POSTGRES_DB=mydatabase
-    volumes:
-      - .:/app
-    networks:
-      - dockernetwork
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
 
   postgres:
     image: postgres:13
@@ -101,8 +32,42 @@ services:
       - dockernetwork
 
 
+  redis:
+    image: redis:alpine
+    ports:
+      - "6379:6379"
+
+  celery:
+    build: .
+    command: celery -A ecommerce worker --loglevel=info
+    volumes:
+      - .:/code
+    depends_on:
+      - db
+      - redis
+    env_file:
+      - .env
+    environment:
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+
+  celery-beat:
+    build: .
+    command: celery -A ecommerce beat --loglevel=info
+    volumes:
+      - .:/code
+    depends_on:
+      - db
+      - redis
+    env_file:
+      - .env
+    environment:
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+
 volumes:
   postgres_data:
 networks:
   dockernetwork:
+
 

@@ -10,7 +10,7 @@ from rest_framework.permissions import IsAuthenticated
 from .tasks import bulk_upload
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter, OrderingFilter
-
+from celery.app.control import Inspect
 
 
 class BulkUploadView(APIView):
@@ -22,7 +22,7 @@ class BulkUploadView(APIView):
 
 class TaskListView(APIView):
     def get(self, request):
-        i = inspect()
+        i = Inspect()
         scheduled_tasks = i.scheduled()
         return Response(scheduled_tasks)
     

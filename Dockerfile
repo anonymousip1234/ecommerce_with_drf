@@ -1,16 +1,17 @@
+FROM python:3.9-slim
 
-FROM python:3.10-slim
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
 
 WORKDIR /app
 
-COPY requirements.txt .
-
+COPY requirements.txt /app/
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY . .
+COPY . /app/
 
-EXPOSE 80
+RUN python manage.py collectstatic --noinput
 
-ENV PYTHONUNBUFFERED=1
+EXPOSE 8000
 
-CMD ["python", "manage.py","runserver","--host", "0.0.0.0", "--port", "80"]
+CMD ["gunicorn", "--bind", "0.0.0.0:8000", "ecommerce.wsgi:application"]
