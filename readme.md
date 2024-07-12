@@ -143,7 +143,9 @@ The application should now be running at `http://localhost:8000`.
 - **Update a product**: `PUT /api/products/{id}/` (Admin only)
 - **Delete a product**: `DELETE /api/products/{id}/` (Admin only)
 - **Bulk upload products using celery**: `POST /api/bulk_upload/`
+- **Websocket For live SKU calculation**: `r'ws/sold_skus/$'`
 - **Search and filter products**: Use query parameters for filtering, searching, and ordering
+
 
 ### Shopping Cart
 
@@ -185,6 +187,14 @@ The application should now be running at `http://localhost:8000`.
         "status": "shipped"
     }
     ```
+- **Place order From Cart**: `POST /api/orders/place_order_from_cart_item/`
+    ```json
+    {
+        "user": <user_id>,
+        "cart_item": <cart_item_id>
+    }
+
+
 
 ## Additional Information
 
@@ -192,6 +202,10 @@ The application should now be running at `http://localhost:8000`.
 - JWT (JSON Web Token) is used for authentication.
 - The application uses PostgreSql as the database, but it can be configured to use other databases by updating the environment variables and settings.
 - Websockets are set up for real-time notifications but need further implementation for specific use cases.
+- Test cases are Also set up for most of the major functionalities,to run the test cases,
+   ```bash
+      python manage.py test
+   ```
 
 ## Assumptions Made
 
