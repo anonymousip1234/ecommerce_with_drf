@@ -25,6 +25,7 @@ This project is a backend for an e-commerce platform built using Django and Djan
 - Python 3.8+
 - Docker
 - Docker Compose
+- Redis
 
 ### Installation
 
@@ -77,6 +78,10 @@ This project is a backend for an e-commerce platform built using Django and Djan
 
     ```bash
     celery -A ecommerce worker -l info
+    ```
+7. Run the redis server:
+    ```bash
+    redis-server
     ```
 
 #### Docker Setup Guide
