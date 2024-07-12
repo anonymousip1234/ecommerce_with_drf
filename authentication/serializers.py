@@ -20,11 +20,19 @@ class LoginSerializer(serializers.Serializer):
     password = serializers.CharField()
 
     def validate(self, data):
-        user = authenticate(**data)
-        if user and user.is_active:
-            return user
-        raise serializers.ValidationError("Incorrect Credentials")
+        username = data.get('username')
+        password = data.get('password')
 
+        if username and password:
+            user = authenticate(username=username, password=password)
+            if user:
+                if not user.is_active:
+                    raise serializers.ValidationError("User is deactivated.")
+                return user
+            else:
+                raise serializers.ValidationError("Invalid credentials.")
+        else:
+            raise serializers.ValidationError("Must include 'username' and 'password'.")
 class OTPLoginSerializer(serializers.Serializer):
     email = serializers.EmailField()
     otp = serializers.CharField()
